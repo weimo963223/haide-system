@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理系统 · 在线同步版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f0f2f5 0%, #e9ecf0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 2rem 2rem 1.5rem;
+        }
+
+        /* 头部区域 */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            gap: 1.2rem 0.5rem;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #1a2639, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .date-badge {
+            background: #d1d9e6;
+            box-shadow: inset 2px 2px 5px #b8bec9, inset -3px -3px 7px #ffffff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .counter-panel {
+            display: flex;
+            gap: 1.2rem;
+            background: #d9e0eb;
+            padding: 0.4rem 1.6rem;
+            border-radius: 60px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .counter-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .counter-label {
+            font-weight: 450;
+            color: #3a4a5f;
+        }
+
+        .counter-value {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #0a1a2a;
+            min-width: 2.4rem;
+            text-align: center;
+        }
+
+        .export-btn {
+            background: #2c3e50;
+            border: none;
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 550;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            box-shadow: 0 6px 12px rgba(44,62,80,0.2), 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .export-btn:hover {
+            background: #1e2b37;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -8px rgba(44,62,80,0.4);
+        }
+
+        .export-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 名单网格 */
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.75rem;
+            background: rgba(255,255,255,0.3);
+            padding: 1.8rem 1.5rem;
+            border-radius: 2rem;
+            margin: 1.8rem 0 2rem;
+            border: 1px solid rgba(255,255,255,0.7);
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .name-item {
+            background: white;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            text-align: center;
+            font-weight: 500;
+            color: #1f2a3f;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: all 0.15s;
+            backdrop-filter: blur(4px);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .name-item:hover {
+            background: #f9fcff;
+            box-shadow: 0 8px 16px -6px #a0b8d0;
+            border-color: #b0c8e0;
+            transform: scale(1.02);
+        }
+
+        .status-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 10px;
+            background: #2ecc71;
+            box-shadow: 0 0 0 2px rgba(46,204,113,0.2);
+            margin-left: 6px;
+        }
+
+        /* 底部 */
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.2rem;
+            color: #5d6f83;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #3a4e66;
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+        }
+
+        .footer-links a:hover {
+            border-bottom-color: #3a4e66;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #4d6278;
+            font-style: italic;
+        }
+
+        .sync-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.8rem;
+            color: #2c3e50;
+            background: #e6edf5;
+            padding: 0.25rem 1rem 0.25rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .sync-dot {
+            width: 10px;
+            height: 10px;
+            background: #27ae60;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(39,174,96,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+    <!-- 引入 Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-section">
+                <h1>807勿扰系统</h1>
+                <span class="date-badge" id="currentDate"></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="counter-panel">
+                    <div class="counter-item">
+                        <span class="counter-label">今日</span>
+                        <span class="counter-value" id="todayCount">0</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-label">总计</span>
+                        <span class="counter-value" id="totalCount">0</span>
+                    </div>
+                </div>
+                <button class="export-btn" id="exportBtn">
+                    <span>⬇️</span> 导出
+                </button>
+            </div>
+        </div>
+
+        <!-- 名单展示区 -->
+        <div id="peopleList" class="list-grid">
+            <div class="loading">加载名单中...</div>
+        </div>
+
+        <!-- 底部信息 & 同步状态 -->
+        <div class="footer">
+            <div class="sync-info">
+                <span class="sync-dot"></span>
+                <span>实时同步 · Supabase</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">© 2026 MiniMax</a>
+                <a href="#">上海稀宇科技有限公司</a>
+                <a href="#">用户协议</a>
+                <a href="#">隐私政策</a>
+            </div>
+            <div style="opacity: 0.7;">Created by Supabase + HTML</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== 配置区域 ====================
+            // 请替换为你的 Supabase 项目信息（从 Project Settings -> API 获取）
+            const SUPABASE_URL = 'https://jaxnudadiyqfztvdnmpe.supabase.co';    // ⚠️ 替换为你的 Project URL
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheG51ZGFkaXlxZnp0dmRubXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTk1MDUsImV4cCI6MjA4ODg3NTUwNX0.o2MK9E1biJSBydz8nzYOU7WGwZ3kQN43Voxx7XozBRM';               // ⚠️ 替换为你的 anon/public key
+
+            // 如果没填配置，弹出提醒（本地运行友好提示）
+            if (SUPABASE_URL.includes('你的项目') || SUPABASE_ANON_KEY.includes('你的anon')) {
+                alert('请先在代码中填写你的 Supabase URL 和 Anon Key！');
+            }
+
+            // 初始化 Supabase 客户端
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // DOM 元素
+            const peopleListEl = document.getElementById('peopleList');
+            const todaySpan = document.getElementById('todayCount');
+            const totalSpan = document.getElementById('totalCount');
+            const exportBtn = document.getElementById('exportBtn');
+            const dateEl = document.getElementById('currentDate');
+
+            // 格式化当前日期
+            function setCurrentDate() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                const weekday = weekdays[now.getDay()];
+                dateEl.textContent = `${year}/${month}/${day} ${weekday}`;
+            }
+            setCurrentDate();
+
+            // 加载所有名单
+            async function loadPeople() {
+                try {
+                    peopleListEl.innerHTML = '<div class="loading">加载名单中...</div>';
+
+                    // 从 Supabase 查询数据（按姓名排序）
+                    const { data, error } = await supabase
+                        .from('people')
+                        .select('*')
+                        .order('name', { ascending: true });
+
+                    if (error) {
+                        console.error('查询错误:', error);
+                        peopleListEl.innerHTML = `<div style="color: #b85c5c; padding: 2rem;">加载失败: ${error.message}</div>`;
+                        return;
+                    }
+
+                    if (!data || data.length === 0) {
+                        peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6a7f9a;">暂无名单，请在 Supabase 插入数据。</div>';
+                        totalSpan.textContent = '0';
+                        todaySpan.textContent = '0';
+                        return;
+                    }
+
+                    // 渲染姓名列表
+                    let htmlStr = '';
+                    data.forEach(item => {
+                        const name = item.name || '未命名';
+                        // 可根据 status 显示不同标记（这里所有 active 都加小绿点）
+                        const badge = item.status === 'active' ? '<span class="status-badge"></span>' : '';
+                        htmlStr += `<div class="name-item">${name}${badge}</div>`;
+                    });
+                    peopleListEl.innerHTML = htmlStr;
+
+                    // 更新计数器：总计 = 总人数，今日 = 今日新增 (created_at 是今天)
+                    const total = data.length;
+                    totalSpan.textContent = total;
+
+                    // 计算今日新增
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+                    const todayCount = data.filter(item => {
+                        if (!item.created_at) return false;
+                        // created_at 格式: 2025-03-12T10:15:30...
+                        const itemDate = item.created_at.split('T')[0];
+                        return itemDate === todayStr;
+                    }).length;
+
+                    todaySpan.textContent = todayCount;
+
+                } catch (err) {
+                    console.error('异常:', err);
+                    peopleListEl.innerHTML = `<div style="color: #b85c5c; padding: 2rem;">发生异常: ${err.message}</div>`;
+                }
+            }
+
+            // 导出名单为 CSV 文件
+            function exportToCSV() {
+                // 获取当前展示的所有姓名文本
+                const nameItems = document.querySelectorAll('.name-item');
+                if (nameItems.length === 0) {
+                    alert('没有可导出的数据');
+                    return;
+                }
+
+                // 提取姓名（去掉内部可能的额外span）
+                const names = [];
+                nameItems.forEach(item => {
+                    // 直接取 textContent 并移除多余空白
+                    let fullText = item.textContent.trim();
+                    // 如果末尾有小绿点之类的符号，保留原名，不影响可读性
+                    names.push(fullText);
+                });
+
+                // 生成 CSV 内容（首行列头）
+                let csvContent = "姓名,状态,导出时间\n";
+                const nowStr = new Date().toLocaleString('zh-CN', { hour12: false });
+                names.forEach(name => {
+                    // 简单去除可能存在的特殊符号，但保留原名；纯展示用
+                    const cleanName = name.replace(/[⚙●•·]/g, '').trim() || name;
+                    csvContent += `"${cleanName}",active,${nowStr}\n`;
+                });
+
+                // 创建下载链接
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // 加 BOM 处理中文
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `807勿扰名单_${new Date().toISOString().slice(0,10)}.csv`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            // 初始化加载
+            loadPeople();
+
+            // 绑定导出事件
+            exportBtn.addEventListener('click', exportToCSV);
+
+            // 可选：每隔一段时间自动刷新数据（比如 30 秒），适合多人协作场景
+            // setInterval(loadPeople, 30000);
+        })();
+    </script>
+</body>
+</html>
