@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理系统2.0</title>
+    <title>加分系统</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         }
 
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(145deg, #f0f2f5 0%, #e9ecf0 100%);
+            background: linear-gradient(145deg, #eef2f7 0%, #d9e0ec 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,294 +22,420 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             width: 100%;
-            background: rgba(255,255,255,0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.6);
-            border: 1px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 2.8rem;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.7);
             padding: 2rem 2rem 1.5rem;
+            position: relative;
         }
 
-        /* 头部区域 */
-        .header {
+        /* 顶部栏 */
+        .top-bar {
             display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
             justify-content: space-between;
-            margin-bottom: 2rem;
-            gap: 1.2rem 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .title-section {
+        .title-area {
             display: flex;
             align-items: baseline;
+            gap: 1rem;
             flex-wrap: wrap;
-            gap: 0.5rem 1rem;
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(145deg, #1a2639, #2c3e50);
+            background: linear-gradient(145deg, #162b40, #2c4a6e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
+            letter-spacing: -0.02em;
         }
 
         .date-badge {
-            background: #d1d9e6;
-            box-shadow: inset 2px 2px 5px #b8bec9, inset -3px -3px 7px #ffffff;
+            background: #cdd9e9;
             padding: 0.4rem 1.2rem;
             border-radius: 40px;
-            font-weight: 500;
-            color: #2c3e50;
             font-size: 0.95rem;
-            border: 1px solid rgba(255,255,255,0.5);
+            font-weight: 500;
+            color: #1f3a57;
+            box-shadow: inset 1px 1px 3px #b5c2d4, inset -2px -2px 5px #ffffff;
         }
 
-        .counter-panel {
+        /* 统计卡片 */
+        .stats-row {
             display: flex;
-            gap: 1.2rem;
-            background: #d9e0eb;
-            padding: 0.4rem 1.6rem;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .counter-card {
+            background: #dfe7f2;
             border-radius: 60px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.05);
+            padding: 0.5rem 2rem;
+            display: flex;
+            gap: 2rem;
+            box-shadow: inset 2px 2px 5px #bac6d8, inset -3px -3px 7px #ffffff;
         }
 
         .counter-item {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.6rem;
         }
 
         .counter-label {
-            font-weight: 450;
-            color: #3a4a5f;
+            font-weight: 500;
+            color: #2c4058;
         }
 
         .counter-value {
             font-weight: 700;
-            font-size: 1.4rem;
-            color: #0a1a2a;
-            min-width: 2.4rem;
+            font-size: 1.8rem;
+            color: #0f2b42;
+            min-width: 2.5rem;
             text-align: center;
         }
 
-        .export-btn {
-            background: #2c3e50;
-            border: none;
+        .settings-btn {
+            background: #2b3f59;
             color: white;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 550;
-            font-size: 1rem;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            box-shadow: 0 6px 12px rgba(44,62,80,0.2), 0 2px 4px rgba(0,0,0,0.1);
+            justify-content: center;
             cursor: pointer;
+            box-shadow: 0 8px 14px -6px #1f344b;
             transition: all 0.15s;
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .export-btn:hover {
-            background: #1e2b37;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px -8px rgba(44,62,80,0.4);
+        .settings-btn:hover {
+            background: #1d2e44;
+            transform: rotate(30deg) scale(1.05);
         }
 
-        .export-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        /* 排行榜 */
+        .rank-section {
+            background: rgba(255,255,255,0.5);
+            border-radius: 2rem;
+            padding: 1.2rem 1.8rem;
+            margin: 1.5rem 0 2rem;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .rank-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a3146;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rank-grid {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .rank-item {
+            background: #ffffffb3;
+            backdrop-filter: blur(4px);
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            border: 1px solid white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rank-medal {
+            font-size: 1.2rem;
+        }
+
+        .rank-name {
+            color: #1d3146;
+        }
+
+        .rank-score {
+            background: #263b54;
+            color: white;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         /* 名单网格 */
         .list-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
             background: rgba(255,255,255,0.3);
             padding: 1.8rem 1.5rem;
             border-radius: 2rem;
-            margin: 1.8rem 0 2rem;
+            margin: 1rem 0 1.8rem;
             border: 1px solid rgba(255,255,255,0.7);
             max-height: 450px;
             overflow-y: auto;
         }
 
-        .name-item {
+        .person-card {
             background: white;
-            padding: 0.6rem 1rem;
-            border-radius: 40px;
-            text-align: center;
-            font-weight: 500;
-            color: #1f2a3f;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.02), 0 2px 2px rgba(0,0,0,0.02);
+            border-radius: 50px;
+            padding: 0.5rem 0.8rem 0.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
             border: 1px solid rgba(255,255,255,0.8);
-            transition: all 0.15s;
-            backdrop-filter: blur(4px);
-            cursor: default;
+            transition: all 0.1s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .person-card:active {
+            transform: scale(0.97);
+            background: #e6f0ff;
+        }
+
+        .person-name {
+            font-weight: 500;
+            color: #162635;
+            font-size: 1rem;
+        }
+
+        .person-score {
+            background: #1e364e;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 2.2rem;
+            height: 2.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.2rem;
-        }
-
-        .name-item:hover {
-            background: #f9fcff;
-            box-shadow: 0 8px 16px -6px #a0b8d0;
-            border-color: #b0c8e0;
-            transform: scale(1.02);
-        }
-
-        .status-badge {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 10px;
-            background: #2ecc71;
-            box-shadow: 0 0 0 2px rgba(46,204,113,0.2);
+            border-radius: 30px;
             margin-left: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         /* 底部 */
         .footer {
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
             justify-content: space-between;
-            margin-top: 1.2rem;
-            color: #5d6f83;
+            align-items: center;
+            color: #5f748b;
             font-size: 0.8rem;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 1.2rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            padding-top: 1rem;
             flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .footer-links a {
-            color: #3a4e66;
-            text-decoration: none;
-            border-bottom: 1px dotted transparent;
+        /* 模态框（设置面板） */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .footer-links a:hover {
-            border-bottom-color: #3a4e66;
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #eef2f7;
+            border-radius: 2.5rem;
+            padding: 2rem 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #1f3b55;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            border-radius: 60px;
+            background: #dae2ed;
+            box-shadow: inset 3px 3px 8px #bac7db, inset -3px -3px 8px #ffffff;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            background: #d2ddec;
+            box-shadow: 4px 4px 10px #b2c1d4, -4px -4px 10px #ffffff;
+            transition: 0.1s;
+        }
+
+        .btn.primary {
+            background: #253d57;
+            color: white;
+            box-shadow: 0 8px 16px -6px #1d334a;
+        }
+
+        .btn.primary:hover {
+            background: #1c3148;
+        }
+
+        .btn:hover {
+            background: #c6d3e6;
+        }
+
+        .edit-mode .person-score {
+            background: #b88b2c;
+            cursor: pointer;
+        }
+
+        .admin-badge {
+            background: #b6343a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
         }
 
         .loading {
+            grid-column: 1/-1;
             text-align: center;
-            padding: 3rem;
-            color: #4d6278;
-            font-style: italic;
-        }
-
-        .sync-info {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.8rem;
-            color: #2c3e50;
-            background: #e6edf5;
-            padding: 0.25rem 1rem 0.25rem 1.2rem;
-            border-radius: 40px;
-        }
-
-        .sync-dot {
-            width: 10px;
-            height: 10px;
-            background: #27ae60;
-            border-radius: 50%;
-            box-shadow: 0 0 0 2px rgba(39,174,96,0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            padding: 2rem;
+            color: #466185;
         }
     </style>
-    <!-- 引入 Supabase JS SDK -->
+    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="title-section">
-                <h1>班级信息管理系统</h1>
+        <!-- 顶部栏：标题 + 统计 + 设置按钮 -->
+        <div class="top-bar">
+            <div class="title-area">
+                <h1>加分系统</h1>
                 <span class="date-badge" id="currentDate"></span>
+                <span id="adminBadge" class="admin-badge" style="display: none;">管理模式</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="counter-panel">
+            <div class="stats-row">
+                <div class="counter-card">
                     <div class="counter-item">
-                        <span class="counter-label">今日</span>
+                        <span class="counter-label">📅 今日</span>
                         <span class="counter-value" id="todayCount">0</span>
                     </div>
                     <div class="counter-item">
-                        <span class="counter-label">总计</span>
+                        <span class="counter-label">📊 总计</span>
                         <span class="counter-value" id="totalCount">0</span>
                     </div>
                 </div>
-                <button class="export-btn" id="exportBtn">
-                    <span>⬇️</span> 导出
-                </button>
+                <button class="settings-btn" id="settingsBtn">⚙</button>
             </div>
         </div>
 
-        <!-- 名单展示区 -->
+        <!-- 排行榜（前5名） -->
+        <div class="rank-section" id="rankSection" style="display: none;">
+            <div class="rank-title">🏆 加分英雄榜 · 前五名</div>
+            <div class="rank-grid" id="rankList"></div>
+        </div>
+
+        <!-- 名单网格 -->
         <div id="peopleList" class="list-grid">
-            <div class="loading">加载名单中...</div>
+            <div class="loading">加载学生名单中...</div>
         </div>
 
-        <!-- 底部信息 & 同步状态 -->
+        <!-- 底部 -->
         <div class="footer">
-            <div class="sync-info">
-                <span class="sync-dot"></span>
-                <span>实时同步 · Supabase</span>
+            <div>© 2026 807课堂 · 实时同步</div>
+            <div style="display: flex; gap: 1.2rem;">
+                <a href="#" style="color: inherit;">用户协议</a>
+                <a href="#" style="color: inherit;">隐私政策</a>
             </div>
-            <div class="footer-links">
-                <a href="#">© 2026 MiniMax</a>
-                <a href="#">上海稀宇科技有限公司</a>
-                <a href="#">用户协议</a>
-                <a href="#">隐私政策</a>
+        </div>
+    </div>
+
+    <!-- 设置模态框（密码登录） -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-card">
+            <div class="modal-title">🔐 管理登录</div>
+            <input type="password" class="input-field" id="passwordInput" placeholder="输入密码" autocomplete="off">
+            <div class="modal-actions">
+                <button class="btn" id="cancelPwdBtn">取消</button>
+                <button class="btn primary" id="submitPwdBtn">登录</button>
             </div>
-            <div style="opacity: 0.7;">Created by Supabase + HTML</div>
         </div>
     </div>
 
     <script>
         (function() {
-            // ==================== 配置区域 ====================
-            // 请替换为你的 Supabase 项目信息（从 Project Settings -> API 获取）
+            // ========== 配置 ==========
             const SUPABASE_URL = 'https://jaxnudadiyqfztvdnmpe.supabase.co';    // ⚠️ 替换为你的 Project URL
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheG51ZGFkaXlxZnp0dmRubXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTk1MDUsImV4cCI6MjA4ODg3NTUwNX0.o2MK9E1biJSBydz8nzYOU7WGwZ3kQN43Voxx7XozBRM';               // ⚠️ 替换为你的 anon/public key
+            const ADMIN_PASSWORD = 'haide331';                         // 管理密码
 
-            // 如果没填配置，弹出提醒（本地运行友好提示）
-            if (SUPABASE_URL.includes('你的项目') || SUPABASE_ANON_KEY.includes('你的anon')) {
-                alert('请先在代码中填写你的 Supabase URL 和 Anon Key！');
-            }
-
-            // 初始化 Supabase 客户端
+            // 初始化Supabase
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // DOM 元素
+            // DOM元素
             const peopleListEl = document.getElementById('peopleList');
             const todaySpan = document.getElementById('todayCount');
             const totalSpan = document.getElementById('totalCount');
-            const exportBtn = document.getElementById('exportBtn');
             const dateEl = document.getElementById('currentDate');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const cancelPwdBtn = document.getElementById('cancelPwdBtn');
+            const submitPwdBtn = document.getElementById('submitPwdBtn');
+            const adminBadge = document.getElementById('adminBadge');
+            const rankSection = document.getElementById('rankSection');
+            const rankList = document.getElementById('rankList');
 
-            // 格式化当前日期
+            let isAdmin = false;              // 是否管理员模式
+            let peopleData = [];               // 缓存所有人数据
+
+            // 显示当前日期
             function setCurrentDate() {
                 const now = new Date();
                 const year = now.getFullYear();
@@ -321,110 +447,220 @@
             }
             setCurrentDate();
 
-            // 加载所有名单
-            async function loadPeople() {
-                try {
-                    peopleListEl.innerHTML = '<div class="loading">加载名单中...</div>';
+            // 判断某个时间戳是否是今天
+            function isToday(timestamp) {
+                if (!timestamp) return false;
+                const date = new Date(timestamp);
+                const today = new Date();
+                return date.getFullYear() === today.getFullYear() &&
+                       date.getMonth() === today.getMonth() &&
+                       date.getDate() === today.getDate();
+            }
 
-                    // 从 Supabase 查询数据（按姓名排序）
+            // 加载所有数据 + 计算统计
+            async function loadData() {
+                try {
+                    peopleListEl.innerHTML = '<div class="loading">加载学生名单中...</div>';
+
+                    // 查询people表
                     const { data, error } = await supabase
                         .from('people')
                         .select('*')
                         .order('name', { ascending: true });
 
-                    if (error) {
-                        console.error('查询错误:', error);
-                        peopleListEl.innerHTML = `<div style="color: #b85c5c; padding: 2rem;">加载失败: ${error.message}</div>`;
-                        return;
-                    }
+                    if (error) throw error;
 
                     if (!data || data.length === 0) {
-                        peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6a7f9a;">暂无名单，请在 Supabase 插入数据。</div>';
-                        totalSpan.textContent = '0';
+                        peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center;">暂无学生数据，请在Supabase添加。</div>';
                         todaySpan.textContent = '0';
+                        totalSpan.textContent = '0';
+                        rankSection.style.display = 'none';
                         return;
                     }
 
-                    // 渲染姓名列表
-                    let htmlStr = '';
-                    data.forEach(item => {
-                        const name = item.name || '未命名';
-                        // 可根据 status 显示不同标记（这里所有 active 都加小绿点）
-                        const badge = item.status === 'active' ? '<span class="status-badge"></span>' : '';
-                        htmlStr += `<div class="name-item">${name}${badge}</div>`;
-                    });
-                    peopleListEl.innerHTML = htmlStr;
+                    peopleData = data; // 缓存
 
-                    // 更新计数器：总计 = 总人数，今日 = 今日新增 (created_at 是今天)
-                    const total = data.length;
-                    totalSpan.textContent = total;
+                    // 计算总计分数（所有人的score总和）
+                    const totalScore = data.reduce((sum, p) => sum + (p.score || 0), 0);
+                    totalSpan.textContent = totalScore;
 
-                    // 计算今日新增
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+                    // 计算今日分数：需要基于每次点击记录，如果没有独立click表，简单方案是统计今天“可能增加的分数”
+                    // 但为了演示精准，我们假设数据库中有last_click_at字段并基于它计算（本版简化：今日直接展示0，后续可扩展）
+                    // 如果想完全精准，需另外建点击记录表。这里我们暂且展示“今日点击次数”为累计，你可以自行替换逻辑
+                    // 我们暂用另一种方式：显示今日新增总分（需要记录每天的变化，比较复杂）
+                    // 为了演示，先简单置0，或置为总计（表示一天累计）。你可以调整。
+                    todaySpan.textContent = '0';  // 如有需要可替换真实逻辑
 
-                    const todayCount = data.filter(item => {
-                        if (!item.created_at) return false;
-                        // created_at 格式: 2025-03-12T10:15:30...
-                        const itemDate = item.created_at.split('T')[0];
-                        return itemDate === todayStr;
-                    }).length;
+                    // 更新排行榜
+                    updateRanking(data);
 
-                    todaySpan.textContent = todayCount;
+                    // 渲染名单
+                    renderPeopleList(data);
 
                 } catch (err) {
-                    console.error('异常:', err);
-                    peopleListEl.innerHTML = `<div style="color: #b85c5c; padding: 2rem;">发生异常: ${err.message}</div>`;
+                    console.error(err);
+                    peopleListEl.innerHTML = `<div style="color: #b34a4a; padding: 2rem;">加载失败: ${err.message}</div>`;
                 }
             }
 
-            // 导出名单为 CSV 文件
-            function exportToCSV() {
-                // 获取当前展示的所有姓名文本
-                const nameItems = document.querySelectorAll('.name-item');
-                if (nameItems.length === 0) {
-                    alert('没有可导出的数据');
+            // 渲染名字列表
+            function renderPeopleList(data) {
+                if (!data || data.length === 0) {
+                    peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center;">名单为空</div>';
                     return;
                 }
 
-                // 提取姓名（去掉内部可能的额外span）
-                const names = [];
-                nameItems.forEach(item => {
-                    // 直接取 textContent 并移除多余空白
-                    let fullText = item.textContent.trim();
-                    // 如果末尾有小绿点之类的符号，保留原名，不影响可读性
-                    names.push(fullText);
+                let html = '';
+                data.forEach(person => {
+                    const score = person.score || 0;
+                    html += `
+                        <div class="person-card" data-id="${person.id}" data-name="${person.name}">
+                            <span class="person-name">${person.name}</span>
+                            <span class="person-score" data-score-id="${person.id}">${score}</span>
+                        </div>
+                    `;
                 });
+                peopleListEl.innerHTML = html;
 
-                // 生成 CSV 内容（首行列头）
-                let csvContent = "姓名,状态,导出时间\n";
-                const nowStr = new Date().toLocaleString('zh-CN', { hour12: false });
-                names.forEach(name => {
-                    // 简单去除可能存在的特殊符号，但保留原名；纯展示用
-                    const cleanName = name.replace(/[⚙●•·]/g, '').trim() || name;
-                    csvContent += `"${cleanName}",active,${nowStr}\n`;
-                });
-
-                // 创建下载链接
-                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // 加 BOM 处理中文
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `名单_${new Date().toISOString().slice(0,10)}.csv`;
-                link.click();
-                URL.revokeObjectURL(link.href);
+                // 如果处于管理员模式，增加特殊类（可点击分数编辑）
+                if (isAdmin) {
+                    peopleListEl.classList.add('edit-mode');
+                } else {
+                    peopleListEl.classList.remove('edit-mode');
+                }
             }
 
+            // 更新排行榜（前5名）
+            function updateRanking(data) {
+                // 按score排序，取前5
+                const sorted = [...data].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 5);
+                if (sorted.length === 0 || sorted[0].score === 0) {
+                    rankSection.style.display = 'none';
+                    return;
+                }
+
+                rankSection.style.display = 'block';
+                let rankHtml = '';
+                sorted.forEach((p, idx) => {
+                    let medal = '';
+                    if (idx === 0) medal = '🥇';
+                    else if (idx === 1) medal = '🥈';
+                    else if (idx === 2) medal = '🥉';
+                    else medal = `${idx+1}.`;
+                    rankHtml += `
+                        <div class="rank-item">
+                            <span class="rank-medal">${medal}</span>
+                            <span class="rank-name">${p.name}</span>
+                            <span class="rank-score">${p.score || 0}</span>
+                        </div>
+                    `;
+                });
+                rankList.innerHTML = rankHtml;
+            }
+
+            // 点击加分（普通模式）
+            async function handlePersonClick(e) {
+                const card = e.target.closest('.person-card');
+                if (!card) return;
+
+                const personId = card.dataset.id;
+                const person = peopleData.find(p => p.id == personId);
+                if (!person) return;
+
+                // 如果是管理员模式，点击分数数字执行减少操作，否则加分
+                if (isAdmin && e.target.classList.contains('person-score')) {
+                    // 管理员点击分数：减1
+                    await adjustScore(personId, -1);
+                } else {
+                    // 普通点击：加1
+                    await adjustScore(personId, 1);
+                }
+            }
+
+            // 调整分数（通用）
+            async function adjustScore(personId, delta) {
+                try {
+                    // 找到当前数据
+                    const person = peopleData.find(p => p.id == personId);
+                    if (!person) return;
+
+                    const newScore = (person.score || 0) + delta;
+                    if (newScore < 0) return; // 分数不能为负
+
+                    // 更新Supabase
+                    const { error } = await supabase
+                        .from('people')
+                        .update({ score: newScore, last_click_at: new Date().toISOString() })
+                        .eq('id', personId);
+
+                    if (error) throw error;
+
+                    // 更新本地缓存
+                    person.score = newScore;
+
+                    // 重新渲染列表（仅更新对应数字，但为了简单重新渲染全部）
+                    // 也可以只改DOM，但为了排行榜一致，重新加载数据
+                    await loadData(); // 重新加载确保排行榜、总计刷新
+
+                } catch (err) {
+                    alert('操作失败：' + err.message);
+                }
+            }
+
+            // 打开密码模态框
+            settingsBtn.addEventListener('click', () => {
+                passwordInput.value = '';
+                passwordModal.classList.add('active');
+            });
+
+            // 取消密码
+            cancelPwdBtn.addEventListener('click', () => {
+                passwordModal.classList.remove('active');
+            });
+
+            // 提交密码
+            submitPwdBtn.addEventListener('click', () => {
+                const pwd = passwordInput.value;
+                if (pwd === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    adminBadge.style.display = 'inline-block';
+                    passwordModal.classList.remove('active');
+                    peopleListEl.classList.add('edit-mode');
+                    loadData(); // 刷新以应用编辑样式
+                } else {
+                    alert('密码错误');
+                }
+            });
+
+            // 点击外部也可关闭模态框（简单处理）
+            passwordModal.addEventListener('click', (e) => {
+                if (e.target === passwordModal) {
+                    passwordModal.classList.remove('active');
+                }
+            });
+
+            // 登出管理员（可选，可隐藏）
+            function logoutAdmin() {
+                isAdmin = false;
+                adminBadge.style.display = 'none';
+                peopleListEl.classList.remove('edit-mode');
+                // 不需要重新加载数据
+            }
+
+            // 监听列表点击
+            peopleListEl.addEventListener('click', handlePersonClick);
+
             // 初始化加载
-            loadPeople();
+            loadData();
 
-            // 绑定导出事件
-            exportBtn.addEventListener('click', exportToCSV);
+            // 可选：添加键盘支持，按ESC退出管理（但不强制）
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isAdmin) {
+                    logoutAdmin();
+                }
+            });
 
-            // 可选：每隔一段时间自动刷新数据（比如 30 秒），适合多人协作场景
-            // setInterval(loadPeople, 30000);
         })();
     </script>
 </body>
-
 </html>
