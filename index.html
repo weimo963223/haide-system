@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>加分系统</title>
+    <title>班级管理系统 · 管理后台版</title>
     <style>
         * {
             margin: 0;
@@ -26,15 +26,13 @@
             width: 100%;
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border-radius: 2.8rem;
-            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.6);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.7);
             padding: 2rem 2rem 1.5rem;
             position: relative;
         }
 
-        /* 顶部栏 */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -57,8 +55,6 @@
             background: linear-gradient(145deg, #162b40, #2c4a6e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
         }
 
         .date-badge {
@@ -71,7 +67,6 @@
             box-shadow: inset 1px 1px 3px #b5c2d4, inset -2px -2px 5px #ffffff;
         }
 
-        /* 统计卡片 */
         .stats-row {
             display: flex;
             gap: 1.5rem;
@@ -129,7 +124,6 @@
             transform: rotate(30deg) scale(1.05);
         }
 
-        /* 排行榜 */
         .rank-section {
             background: rgba(255,255,255,0.5);
             border-radius: 2rem;
@@ -143,9 +137,6 @@
             font-weight: 600;
             color: #1a3146;
             margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .rank-grid {
@@ -184,7 +175,6 @@
             font-weight: 600;
         }
 
-        /* 名单网格 */
         .list-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -194,7 +184,7 @@
             border-radius: 2rem;
             margin: 1rem 0 1.8rem;
             border: 1px solid rgba(255,255,255,0.7);
-            max-height: 450px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
@@ -238,7 +228,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        /* 底部 */
         .footer {
             display: flex;
             justify-content: space-between;
@@ -251,7 +240,7 @@
             gap: 0.5rem;
         }
 
-        /* 模态框（设置面板） */
+        /* 管理后台模态框 */
         .modal {
             display: none;
             position: fixed;
@@ -271,74 +260,133 @@
             background: #eef2f7;
             border-radius: 2.5rem;
             padding: 2rem 2.5rem;
-            max-width: 400px;
-            width: 90%;
+            max-width: 900px;
+            width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
             box-shadow: 0 30px 50px rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.7);
         }
 
         .modal-title {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: #1f3b55;
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .input-field {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
+        .close-btn {
+            background: none;
             border: none;
-            border-radius: 60px;
-            background: #dae2ed;
-            box-shadow: inset 3px 3px 8px #bac7db, inset -3px -3px 8px #ffffff;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            outline: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #4a617c;
+            padding: 0 0.5rem;
         }
 
-        .modal-actions {
+        .admin-tabs {
             display: flex;
             gap: 1rem;
-            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 0.5rem;
         }
 
-        .btn {
-            padding: 0.7rem 1.8rem;
-            border: none;
-            border-radius: 40px;
-            font-weight: 500;
+        .tab {
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
             cursor: pointer;
-            background: #d2ddec;
-            box-shadow: 4px 4px 10px #b2c1d4, -4px -4px 10px #ffffff;
-            transition: 0.1s;
+            font-weight: 500;
+            background: transparent;
         }
 
-        .btn.primary {
+        .tab.active {
             background: #253d57;
             color: white;
-            box-shadow: 0 8px 16px -6px #1d334a;
         }
 
-        .btn.primary:hover {
-            background: #1c3148;
+        .admin-section {
+            display: none;
         }
 
-        .btn:hover {
-            background: #c6d3e6;
+        .admin-section.active {
+            display: block;
         }
 
-        .edit-mode .person-score {
-            background: #b88b2c;
-            cursor: pointer;
+        .student-list-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
         }
 
-        .admin-badge {
-            background: #b6343a;
-            color: white;
-            padding: 0.2rem 1rem;
+        .student-admin-item {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .student-admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-btn {
+            width: 32px;
+            height: 32px;
             border-radius: 30px;
-            font-size: 0.8rem;
-            margin-left: 1rem;
+            border: none;
+            background: #dae2ed;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px #b5c2d4, -2px -2px 5px white;
+        }
+
+        .admin-btn.danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .logs-table th {
+            background: #2c4058;
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        .logs-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #e0e7ef;
+        }
+
+        .logs-table tr:hover {
+            background: #f0f5ff;
+        }
+
+        .delete-log {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.5rem;
         }
 
         .loading {
@@ -348,17 +396,14 @@
             color: #466185;
         }
     </style>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <!-- 顶部栏：标题 + 统计 + 设置按钮 -->
         <div class="top-bar">
             <div class="title-area">
                 <h1>加分系统</h1>
                 <span class="date-badge" id="currentDate"></span>
-                <span id="adminBadge" class="admin-badge" style="display: none;">管理模式</span>
             </div>
             <div class="stats-row">
                 <div class="counter-card">
@@ -375,20 +420,17 @@
             </div>
         </div>
 
-        <!-- 排行榜（前5名） -->
         <div class="rank-section" id="rankSection" style="display: none;">
             <div class="rank-title">🏆 加分英雄榜 · 前五名</div>
             <div class="rank-grid" id="rankList"></div>
         </div>
 
-        <!-- 名单网格 -->
         <div id="peopleList" class="list-grid">
             <div class="loading">加载学生名单中...</div>
         </div>
 
-        <!-- 底部 -->
         <div class="footer">
-            <div>© 2026 807课堂 · 实时同步</div>
+            <div>© 2026 课堂 · 实时同步</div>
             <div style="display: flex; gap: 1.2rem;">
                 <a href="#" style="color: inherit;">用户协议</a>
                 <a href="#" style="color: inherit;">隐私政策</a>
@@ -396,29 +438,69 @@
         </div>
     </div>
 
-    <!-- 设置模态框（密码登录） -->
+    <!-- 密码登录模态框 -->
     <div class="modal" id="passwordModal">
-        <div class="modal-card">
+        <div class="modal-card" style="max-width: 400px;">
             <div class="modal-title">🔐 管理登录</div>
-            <input type="password" class="input-field" id="passwordInput" placeholder="输入密码" autocomplete="off">
-            <div class="modal-actions">
+            <input type="password" class="input-field" id="passwordInput" placeholder="输入密码" autocomplete="off" style="width: 100%; padding: 1rem; border-radius: 60px; border: none; background: #dae2ed; margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                 <button class="btn" id="cancelPwdBtn">取消</button>
                 <button class="btn primary" id="submitPwdBtn">登录</button>
             </div>
         </div>
     </div>
 
+    <!-- 管理后台主模态框 -->
+    <div class="modal" id="adminModal">
+        <div class="modal-card">
+            <div class="modal-title">
+                <span>⚙️ 管理后台</span>
+                <button class="close-btn" id="closeAdminModal">&times;</button>
+            </div>
+
+            <div class="admin-tabs">
+                <div class="tab active" data-tab="students">学生管理</div>
+                <div class="tab" data-tab="logs">操作记录</div>
+            </div>
+
+            <!-- 学生管理面板 -->
+            <div class="admin-section active" id="studentsTab">
+                <div style="margin-bottom: 1rem; font-weight: 500;">点击下方按钮可直接调整分数：</div>
+                <div class="student-list-admin" id="adminStudentList">
+                    <div class="loading">加载中...</div>
+                </div>
+            </div>
+
+            <!-- 操作记录面板 -->
+            <div class="admin-section" id="logsTab">
+                <div style="margin-bottom: 1rem; font-weight: 500;">最近操作记录（点击🗑️可撤销）：</div>
+                <table class="logs-table" id="logsTable">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>姓名</th>
+                            <th>变化</th>
+                            <th>后分数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsBody">
+                        <tr><td colspan="5" class="loading">加载记录中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function() {
-            // ========== 配置 ==========
-            const SUPABASE_URL = 'https://jaxnudadiyqfztvdnmpe.supabase.co';    // ⚠️ 替换为你的 Project URL
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheG51ZGFkaXlxZnp0dmRubXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTk1MDUsImV4cCI6MjA4ODg3NTUwNX0.o2MK9E1biJSBydz8nzYOU7WGwZ3kQN43Voxx7XozBRM';               // ⚠️ 替换为你的 anon/public key
-            const ADMIN_PASSWORD = 'haide331';                         // 管理密码
+            const SUPABASE_URL = 'https://jaxnudadiyqfztvdnmpe.supabase.co';    // ⚠️ 替换
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpheG51ZGFkaXlxZnp0dmRubXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTk1MDUsImV4cCI6MjA4ODg3NTUwNX0.o2MK9E1biJSBydz8nzYOU7WGwZ3kQN43Voxx7XozBRM';               // ⚠️ 替换
+            const ADMIN_PASSWORD = 'haide331';
 
-            // 初始化Supabase
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // DOM元素
+            // DOM 元素
             const peopleListEl = document.getElementById('peopleList');
             const todaySpan = document.getElementById('todayCount');
             const totalSpan = document.getElementById('totalCount');
@@ -428,14 +510,15 @@
             const passwordInput = document.getElementById('passwordInput');
             const cancelPwdBtn = document.getElementById('cancelPwdBtn');
             const submitPwdBtn = document.getElementById('submitPwdBtn');
-            const adminBadge = document.getElementById('adminBadge');
-            const rankSection = document.getElementById('rankSection');
-            const rankList = document.getElementById('rankList');
+            const adminModal = document.getElementById('adminModal');
+            const closeAdminModal = document.getElementById('closeAdminModal');
+            const tabs = document.querySelectorAll('.tab');
+            const adminStudentList = document.getElementById('adminStudentList');
+            const logsBody = document.getElementById('logsBody');
 
-            let isAdmin = false;              // 是否管理员模式
-            let peopleData = [];               // 缓存所有人数据
+            let peopleData = [];
 
-            // 显示当前日期
+            // 显示日期
             function setCurrentDate() {
                 const now = new Date();
                 const year = now.getFullYear();
@@ -447,219 +530,248 @@
             }
             setCurrentDate();
 
-            // 判断某个时间戳是否是今天
-            function isToday(timestamp) {
-                if (!timestamp) return false;
-                const date = new Date(timestamp);
-                const today = new Date();
-                return date.getFullYear() === today.getFullYear() &&
-                       date.getMonth() === today.getMonth() &&
-                       date.getDate() === today.getDate();
-            }
-
-            // 加载所有数据 + 计算统计
+            // 加载数据
             async function loadData() {
                 try {
-                    peopleListEl.innerHTML = '<div class="loading">加载学生名单中...</div>';
-
-                    // 查询people表
                     const { data, error } = await supabase
                         .from('people')
                         .select('*')
                         .order('name', { ascending: true });
 
                     if (error) throw error;
+                    peopleData = data || [];
 
-                    if (!data || data.length === 0) {
-                        peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center;">暂无学生数据，请在Supabase添加。</div>';
-                        todaySpan.textContent = '0';
-                        totalSpan.textContent = '0';
-                        rankSection.style.display = 'none';
-                        return;
-                    }
-
-                    peopleData = data; // 缓存
-
-                    // 计算总计分数（所有人的score总和）
-                    const totalScore = data.reduce((sum, p) => sum + (p.score || 0), 0);
+                    // 渲染主列表
+                    renderPeopleList(peopleData);
+                    
+                    // 更新总计
+                    const totalScore = peopleData.reduce((sum, p) => sum + (p.score || 0), 0);
                     totalSpan.textContent = totalScore;
 
-                    // 计算今日分数：需要基于每次点击记录，如果没有独立click表，简单方案是统计今天“可能增加的分数”
-                    // 但为了演示精准，我们假设数据库中有last_click_at字段并基于它计算（本版简化：今日直接展示0，后续可扩展）
-                    // 如果想完全精准，需另外建点击记录表。这里我们暂且展示“今日点击次数”为累计，你可以自行替换逻辑
-                    // 我们暂用另一种方式：显示今日新增总分（需要记录每天的变化，比较复杂）
-                    // 为了演示，先简单置0，或置为总计（表示一天累计）。你可以调整。
-                    todaySpan.textContent = '0';  // 如有需要可替换真实逻辑
-
                     // 更新排行榜
-                    updateRanking(data);
-
-                    // 渲染名单
-                    renderPeopleList(data);
+                    updateRanking(peopleData);
 
                 } catch (err) {
                     console.error(err);
-                    peopleListEl.innerHTML = `<div style="color: #b34a4a; padding: 2rem;">加载失败: ${err.message}</div>`;
                 }
             }
 
-            // 渲染名字列表
             function renderPeopleList(data) {
-                if (!data || data.length === 0) {
-                    peopleListEl.innerHTML = '<div style="padding: 2rem; text-align: center;">名单为空</div>';
-                    return;
-                }
-
                 let html = '';
-                data.forEach(person => {
-                    const score = person.score || 0;
+                data.forEach(p => {
                     html += `
-                        <div class="person-card" data-id="${person.id}" data-name="${person.name}">
-                            <span class="person-name">${person.name}</span>
-                            <span class="person-score" data-score-id="${person.id}">${score}</span>
+                        <div class="person-card" data-id="${p.id}">
+                            <span class="person-name">${p.name}</span>
+                            <span class="person-score">${p.score || 0}</span>
                         </div>
                     `;
                 });
-                peopleListEl.innerHTML = html;
-
-                // 如果处于管理员模式，增加特殊类（可点击分数编辑）
-                if (isAdmin) {
-                    peopleListEl.classList.add('edit-mode');
-                } else {
-                    peopleListEl.classList.remove('edit-mode');
-                }
+                peopleListEl.innerHTML = html || '<div style="padding: 2rem;">暂无数据</div>';
             }
 
-            // 更新排行榜（前5名）
             function updateRanking(data) {
-                // 按score排序，取前5
                 const sorted = [...data].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 5);
                 if (sorted.length === 0 || sorted[0].score === 0) {
-                    rankSection.style.display = 'none';
+                    document.getElementById('rankSection').style.display = 'none';
                     return;
                 }
-
-                rankSection.style.display = 'block';
+                document.getElementById('rankSection').style.display = 'block';
                 let rankHtml = '';
                 sorted.forEach((p, idx) => {
-                    let medal = '';
-                    if (idx === 0) medal = '🥇';
-                    else if (idx === 1) medal = '🥈';
-                    else if (idx === 2) medal = '🥉';
-                    else medal = `${idx+1}.`;
-                    rankHtml += `
-                        <div class="rank-item">
-                            <span class="rank-medal">${medal}</span>
-                            <span class="rank-name">${p.name}</span>
-                            <span class="rank-score">${p.score || 0}</span>
-                        </div>
-                    `;
+                    const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx+1}.`;
+                    rankHtml += `<div class="rank-item"><span class="rank-medal">${medal}</span><span class="rank-name">${p.name}</span><span class="rank-score">${p.score}</span></div>`;
                 });
-                rankList.innerHTML = rankHtml;
+                document.getElementById('rankList').innerHTML = rankHtml;
             }
 
-            // 点击加分（普通模式）
-            async function handlePersonClick(e) {
-                const card = e.target.closest('.person-card');
-                if (!card) return;
-
-                const personId = card.dataset.id;
-                const person = peopleData.find(p => p.id == personId);
-                if (!person) return;
-
-                // 如果是管理员模式，点击分数数字执行减少操作，否则加分
-                if (isAdmin && e.target.classList.contains('person-score')) {
-                    // 管理员点击分数：减1
-                    await adjustScore(personId, -1);
-                } else {
-                    // 普通点击：加1
-                    await adjustScore(personId, 1);
-                }
-            }
-
-            // 调整分数（通用）
+            // 加分/减分并记录日志
             async function adjustScore(personId, delta) {
                 try {
-                    // 找到当前数据
                     const person = peopleData.find(p => p.id == personId);
                     if (!person) return;
 
                     const newScore = (person.score || 0) + delta;
-                    if (newScore < 0) return; // 分数不能为负
+                    if (newScore < 0) return;
 
-                    // 更新Supabase
-                    const { error } = await supabase
+                    // 1. 更新 people 表
+                    const { error: updateError } = await supabase
                         .from('people')
-                        .update({ score: newScore, last_click_at: new Date().toISOString() })
+                        .update({ score: newScore })
                         .eq('id', personId);
+                    if (updateError) throw updateError;
 
-                    if (error) throw error;
+                    // 2. 插入操作日志
+                    const { error: logError } = await supabase
+                        .from('click_logs')
+                        .insert({
+                            person_id: personId,
+                            person_name: person.name,
+                            delta: delta,
+                            score_after: newScore,
+                            created_at: new Date().toISOString()
+                        });
+                    if (logError) throw logError;
 
-                    // 更新本地缓存
-                    person.score = newScore;
-
-                    // 重新渲染列表（仅更新对应数字，但为了简单重新渲染全部）
-                    // 也可以只改DOM，但为了排行榜一致，重新加载数据
-                    await loadData(); // 重新加载确保排行榜、总计刷新
+                    // 3. 重新加载数据
+                    await loadData();
+                    
+                    // 4. 如果管理后台开着，刷新里面的列表
+                    if (adminModal.classList.contains('active')) {
+                        loadAdminData();
+                    }
 
                 } catch (err) {
                     alert('操作失败：' + err.message);
                 }
             }
 
-            // 打开密码模态框
-            settingsBtn.addEventListener('click', () => {
-                passwordInput.value = '';
-                passwordModal.classList.add('active');
+            // 删除操作记录（撤销）
+            async function deleteLog(logId, personId, delta, oldScore) {
+                if (!confirm('确定要撤销这次操作吗？')) return;
+
+                try {
+                    // 1. 删除日志记录
+                    const { error: deleteError } = await supabase
+                        .from('click_logs')
+                        .delete()
+                        .eq('id', logId);
+                    if (deleteError) throw deleteError;
+
+                    // 2. 恢复 people 表的分数（反向操作）
+                    const person = peopleData.find(p => p.id == personId);
+                    if (person) {
+                        const newScore = person.score - delta; // delta 是原来的变化值
+                        await supabase
+                            .from('people')
+                            .update({ score: newScore })
+                            .eq('id', personId);
+                    }
+
+                    // 3. 刷新数据
+                    await loadData();
+                    loadAdminData();
+
+                } catch (err) {
+                    alert('撤销失败：' + err.message);
+                }
+            }
+
+            // 加载管理后台数据
+            async function loadAdminData() {
+                // 加载学生列表
+                let studentHtml = '';
+                peopleData.forEach(p => {
+                    studentHtml += `
+                        <div class="student-admin-item">
+                            <span>${p.name} <strong>(${p.score || 0})</strong></span>
+                            <div class="student-admin-actions">
+                                <button class="admin-btn" onclick="window.adjustScoreWrapper(${p.id}, 1)">+1</button>
+                                <button class="admin-btn" onclick="window.adjustScoreWrapper(${p.id}, -1)">-1</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                adminStudentList.innerHTML = studentHtml || '<div>暂无学生</div>';
+
+                // 加载操作日志
+                const { data: logs, error } = await supabase
+                    .from('click_logs')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
+                if (error) throw error;
+
+                let logHtml = '';
+                logs.forEach(log => {
+                    const time = new Date(log.created_at).toLocaleString('zh-CN', { hour12: false });
+                    const deltaStr = log.delta > 0 ? `+${log.delta}` : log.delta;
+                    logHtml += `
+                        <tr>
+                            <td>${time}</td>
+                            <td>${log.person_name}</td>
+                            <td style="color: ${log.delta > 0 ? '#28a745' : '#dc3545'}">${deltaStr}</td>
+                            <td>${log.score_after}</td>
+                            <td>
+                                <button class="delete-log" onclick="window.deleteLogWrapper(${log.id}, ${log.person_id}, ${log.delta})">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                logsBody.innerHTML = logHtml || '<tr><td colspan="5" style="text-align: center;">暂无操作记录</td></tr>';
+            }
+
+            // 包装函数供onclick调用
+            window.adjustScoreWrapper = function(personId, delta) {
+                adjustScore(personId, delta);
+            };
+
+            window.deleteLogWrapper = function(logId, personId, delta) {
+                deleteLog(logId, personId, delta);
+            };
+
+            // 点击主列表加分
+            peopleListEl.addEventListener('click', (e) => {
+                const card = e.target.closest('.person-card');
+                if (!card) return;
+                const personId = card.dataset.id;
+                adjustScore(personId, 1);
             });
 
-            // 取消密码
+            // 打开密码框
+            settingsBtn.addEventListener('click', () => {
+                passwordModal.classList.add('active');
+                passwordInput.value = '';
+            });
+
             cancelPwdBtn.addEventListener('click', () => {
                 passwordModal.classList.remove('active');
             });
 
-            // 提交密码
             submitPwdBtn.addEventListener('click', () => {
-                const pwd = passwordInput.value;
-                if (pwd === ADMIN_PASSWORD) {
-                    isAdmin = true;
-                    adminBadge.style.display = 'inline-block';
+                if (passwordInput.value === ADMIN_PASSWORD) {
                     passwordModal.classList.remove('active');
-                    peopleListEl.classList.add('edit-mode');
-                    loadData(); // 刷新以应用编辑样式
+                    adminModal.classList.add('active');
+                    loadAdminData();
                 } else {
                     alert('密码错误');
                 }
             });
 
-            // 点击外部也可关闭模态框（简单处理）
+            closeAdminModal.addEventListener('click', () => {
+                adminModal.classList.remove('active');
+            });
+
+            // 选项卡切换
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+                    if (tab.dataset.tab === 'students') {
+                        document.getElementById('studentsTab').classList.add('active');
+                    } else {
+                        document.getElementById('logsTab').classList.add('active');
+                    }
+                });
+            });
+
+            // 点击模态框背景关闭
+            adminModal.addEventListener('click', (e) => {
+                if (e.target === adminModal) {
+                    adminModal.classList.remove('active');
+                }
+            });
+
             passwordModal.addEventListener('click', (e) => {
                 if (e.target === passwordModal) {
                     passwordModal.classList.remove('active');
                 }
             });
 
-            // 登出管理员（可选，可隐藏）
-            function logoutAdmin() {
-                isAdmin = false;
-                adminBadge.style.display = 'none';
-                peopleListEl.classList.remove('edit-mode');
-                // 不需要重新加载数据
-            }
-
-            // 监听列表点击
-            peopleListEl.addEventListener('click', handlePersonClick);
-
-            // 初始化加载
+            // 初始化
             loadData();
-
-            // 可选：添加键盘支持，按ESC退出管理（但不强制）
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && isAdmin) {
-                    logoutAdmin();
-                }
-            });
-
         })();
     </script>
 </body>
