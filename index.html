@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理系统 · 在线同步版</title>
+    <title>管理系统2.0</title>
     <style>
         * {
             margin: 0;
@@ -246,7 +246,7 @@
     <div class="container">
         <div class="header">
             <div class="title-section">
-                <h1>807勿扰系统</h1>
+                <h1>班级信息管理系统</h1>
                 <span class="date-badge" id="currentDate"></span>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -410,7 +410,7 @@
                 const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // 加 BOM 处理中文
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `807勿扰名单_${new Date().toISOString().slice(0,10)}.csv`;
+                link.download = `名单_${new Date().toISOString().slice(0,10)}.csv`;
                 link.click();
                 URL.revokeObjectURL(link.href);
             }
@@ -426,4 +426,5 @@
         })();
     </script>
 </body>
+
 </html>
